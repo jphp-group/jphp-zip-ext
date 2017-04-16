@@ -158,11 +158,11 @@ class ZipFile
 1. Open your shell (bash or cmd):
 2. Use gradlew command:
 
+```bash
+// On Windows
+gradlew clean jar bundle
 
-    // On Windows
-    gradlew clean jar bundle
-    
-    
-    // On Linux
-    chmodx +x gradlew
-    ./gradlew clean jar bundle
+// On Linux
+chmodx +x gradlew
+./gradlew clean jar bundle
+```
