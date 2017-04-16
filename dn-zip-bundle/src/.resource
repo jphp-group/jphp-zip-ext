@@ -9,5 +9,5 @@ group=other
 icon=develnext/bundle/zip/icon32.png
 
 # full class name of bundle
-class=develnext\\bundle\\zip\\MyBundle
+class=develnext\\bundle\\zip\\ZipBundle
 author=DevelNext, Dmitriy Zayceff

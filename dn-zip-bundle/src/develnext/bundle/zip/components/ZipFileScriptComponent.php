@@ -24,6 +24,11 @@ class ZipFileScriptComponent extends AbstractScriptComponent
         return 'Zip файл';
     }
 
+    public function getIdPattern()
+    {
+        return "zipFile%s";
+    }
+
     /**
      * @return string
      */

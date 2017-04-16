@@ -8,6 +8,10 @@ use php\io\Stream;
 use php\lang\Thread;
 use php\lib\fs;
 
+class ZipFileScriptStopException extends \Exception {
+
+}
+
 class ZipFileScript extends AbstractScript
 {
     /**
@@ -26,11 +30,24 @@ class ZipFileScript extends AbstractScript
     public $autoCreate = true;
 
     /**
+     * @var bool
+     */
+    private $_stopped = false;
+
+    /**
      * @param $target
      * @return mixed
      */
     protected function applyImpl($target)
     {
+    }
+
+    /**
+     * Stop make pack or unpack.
+     */
+    public function stop()
+    {
+        $this->_stopped = true;
     }
 
     /**
@@ -46,7 +63,7 @@ class ZipFileScript extends AbstractScript
      */
     public function setPath($path)
     {
-        if ($this->path !== "$path") {
+        if ($this->path === "$path") {
             return;
         }
 
@@ -89,15 +106,27 @@ class ZipFileScript extends AbstractScript
      */
     public function unpack($toDirectory, $charset = null, callable $callback = null)
     {
-        $this->zipFile()->unpack($toDirectory, $charset, function ($name) use ($callback) {
-            if ($callback) {
-                $callback();
-            }
+        try {
+            $this->zipFile()->unpack($toDirectory, $charset, function ($name) use ($callback) {
+                if ($this->_stopped) {
+                    throw new ZipFileScriptStopException();
+                }
 
-            $this->trigger('unpack', ['name' => $name]);
-        });
+                if ($callback) {
+                    $callback();
+                }
 
-        $this->trigger('unpackAll');
+                uiLater(function () use ($name) {
+                    $this->trigger('unpack', ['name' => $name]);
+                });
+            });
+
+            uiLater(function () {
+                $this->trigger('unpackAll');
+            });
+        } catch (ZipFileScriptStopException $e) {
+            $this->_stopped = false;
+        }
     }
 
     /**
@@ -178,7 +207,10 @@ class ZipFileScript extends AbstractScript
     public function add($path, $source, $compressLevel = -1)
     {
         $this->zipFile()->add($path, $source, $compressLevel);
-        $this->trigger('pack', ['path' => $path, 'source' => $source, 'compressLevel' => $compressLevel]);
+
+        uiLater(function () use ($path, $source, $compressLevel) {
+            $this->trigger('pack', ['path' => $path, 'source' => $source, 'compressLevel' => $compressLevel]);
+        });
     }
 
     /**
@@ -190,17 +222,35 @@ class ZipFileScript extends AbstractScript
      */
     public function addDirectory($dir, $compressLevel = -1, callable $callback = null)
     {
-        $this->zipFile()->addDirectory($dir, $compressLevel, function ($name) use ($dir, $compressLevel, $callback) {
-            if ($callback) {
-                $callback($name);
-            }
+        try {
+            $this->zipFile()->addDirectory($dir, $compressLevel, function ($name) use ($dir, $compressLevel, $callback) {
+                if ($this->_stopped) {
+                    throw new ZipFileScriptStopException();
+                }
 
-            $this->trigger('pack', ['path' => $name, 'source' => $dir, 'compressLevel' => $compressLevel]);
-        });
+                if ($callback) {
+                    $callback($name);
+                }
 
-        $this->trigger('packAll');
+                uiLater(function () use ($name, $dir, $compressLevel) {
+                    $this->trigger('pack', ['path' => $name, 'source' => $dir, 'compressLevel' => $compressLevel]);
+                });
+            });
+
+            uiLater(function () {
+                $this->trigger('packAll');
+            });
+        } catch (ZipFileScriptStopException $e) {
+            $this->_stopped = false;
+        }
     }
 
+    /**
+     * @param $dir
+     * @param int $compressLevel
+     * @param callable|null $callback
+     * @return Thread
+     */
     public function addDirectoryAsync($dir, $compressLevel = -1, callable $callback = null)
     {
         $th = new Thread(function () use ($dir, $compressLevel, $callback) {
@@ -220,7 +270,10 @@ class ZipFileScript extends AbstractScript
     public function addFromString($path, $string, $compressLevel = -1)
     {
         $this->zipFile()->addFromString($path, $string, $compressLevel);
-        $this->trigger('pack', ['path' => $path, 'source' => $string, 'compressLevel' => $compressLevel]);
+
+        uiLater(function () use ($path, $string, $compressLevel) {
+            $this->trigger('pack', ['path' => $path, 'source' => $string, 'compressLevel' => $compressLevel]);
+        });
     }
 
     /**
@@ -231,6 +284,14 @@ class ZipFileScript extends AbstractScript
     {
         $this->zipFile()->remove($path);
     }
+
+    public function free()
+    {
+        $this->stop();
+
+        parent::free();
+    }
+
 
     /**
      * @return ZipFile

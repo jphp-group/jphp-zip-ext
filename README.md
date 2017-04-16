@@ -169,9 +169,11 @@ class ZipFile
 
 ```bash
 // On Windows
-gradlew clean jar bundle
+gradlew bundle -Drelease=true
 
 // On Linux
 chmodx +x gradlew
-./gradlew clean jar bundle
+./gradlew bundle -Drelease=true
 ```
+
+3. See the `dn-zip-bundle/build` directory to find the build DevelNext bundle.
