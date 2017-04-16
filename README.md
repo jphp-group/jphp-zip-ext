@@ -9,6 +9,7 @@ An extension for using zip archive in jphp and develnext. It contains two classe
 
 
 ### Example
+> Примеры
 
 ```php
 use php\compress\ZipFile;
@@ -161,6 +162,7 @@ class ZipFile
 
 
 ### To Build
+> Как собрать?
 
 1. Open your shell (bash or cmd):
 2. Use gradlew command:
