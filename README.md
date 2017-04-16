@@ -7,6 +7,8 @@ An extension for using zip archive in jphp and develnext. It contains two classe
 
 Расширение для использования zip архивов в jphp и develnext. Оно содержит 2 класса - `ZipFile` и `ZipFileScript` компонент для среды DevelNext.
 
+[Последняя версия (скачать)](https://github.com/jphp-compiler/jphp-zip-ext/releases/download/1.0/dn-zip-bundle.dnbundle)
+
 ![image](https://cloud.githubusercontent.com/assets/1113915/25070799/756a4a2e-22b0-11e7-946b-27e7ff457ca0.png)
 
 
