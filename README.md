@@ -1,6 +1,13 @@
 ## Zip Extension
 > For JPHP and DevelNext ([http://develnext.org](http://develnext.org)).
 
+An extension for using zip archive in jphp and develnext. It contains two classes - `ZipFile` and the `ZipFileScript` component for DevelNext IDE.
+
+---
+
+Расширение для использования zip архивов в jphp и develnext. Оно содержит 2 класса - `ZipFile` и `ZipFileScript` компонент для среды DevelNext.
+
+
 ### Example
 
 ```php
