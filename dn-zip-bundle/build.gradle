@@ -27,6 +27,20 @@ jar {
     exclude '.resource'
 }
 
+task embeddedBundle(type: Copy, dependsOn: ['clean', 'jar']) {
+    from configurations.runtime.allArtifacts.files
+    from configurations.runtime
+
+    into project.buildDir.path + "/bundle/" + name
+
+    from ("src/.resource")
+
+    doLast {
+        new File(project.buildDir.path + "/bundle/" + name + "/.resource")
+                .renameTo(project.buildDir.path + "/bundle/" + name + ".resource")
+    }
+}
+git
 task bundle(type: Zip, dependsOn: ['clean', 'jar']) {
     println project.buildDir
 
