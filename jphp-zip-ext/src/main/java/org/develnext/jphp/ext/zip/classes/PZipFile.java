@@ -177,6 +177,7 @@ public class PZipFile extends BaseObject {
         result.refOfIndex("time").assign(zipEntry.getTime());
         result.refOfIndex("method").assign(zipEntry.getMethod());
         result.refOfIndex("comment").assign(zipEntry.getComment());
+        result.refOfIndex("directory").assign(zipEntry.isDirectory());
 
         return result;
     }

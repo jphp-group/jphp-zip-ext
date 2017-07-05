@@ -60,7 +60,7 @@ class ZipFile
 
     /**
      * Returns stat of one zip entry by path.
-     * [name, size, compressedSize, time, crc, comment, method]
+     * [name, size, compressedSize, time, crc, comment, method, directory]
      *
      * @param string $path
      * @return array
