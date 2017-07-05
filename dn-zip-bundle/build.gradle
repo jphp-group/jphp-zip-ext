@@ -40,7 +40,7 @@ task embeddedBundle(type: Copy, dependsOn: ['clean', 'jar']) {
                 .renameTo(project.buildDir.path + "/bundle/" + name + ".resource")
     }
 }
-git
+
 task bundle(type: Zip, dependsOn: ['clean', 'jar']) {
     println project.buildDir
 
