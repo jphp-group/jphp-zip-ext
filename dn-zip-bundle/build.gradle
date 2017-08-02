@@ -13,7 +13,13 @@ repositories {
 }
 
 dependencies {
-    compile project(':jphp-zip-ext')
+
+    if (findProject(':jphp-zip-ext/jphp-zip-ext') != null) {
+        compile project(':jphp-zip-ext/jphp-zip-ext')
+    } else {
+        compile project(':jphp-zip-ext')
+    }
+
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
@@ -23,7 +29,7 @@ sourceSets {
     main.resources.srcDirs = ['src']
 }
 
-/*jar {
+jar {
     exclude '.resource'
 
     doLast {
@@ -39,7 +45,7 @@ sourceSets {
         new File(project.buildDir.path + "/bundle/" + name + "/.resource")
                 .renameTo(project.buildDir.path + "/bundle/" + name + ".resource")
     }
-}*/
+}
 
 task bundle(type: Zip, dependsOn: ['clean', 'jar']) {
     println project.buildDir
